@@ -1,5 +1,6 @@
 import HeroSection from "./component/HeroSection";
 import AboutSection from "./component/AboutSection";
+import ProjectsSection from "./component/ProjectsSection";
 
 /**
  * Home page – Server Component (SSR by default in Next.js App Router).
@@ -12,7 +13,16 @@ export default function Home() {
     <main>
       <HeroSection />
       <AboutSection />
-      {/* Future sections will be added here */}
+      {/* ── Divider: same border color as the "See my Work" button (#444444) ── */}
+      <hr
+        style={{
+          border: "none",
+          borderTop: "1px solid #444444",
+          margin: "0",
+          width: "100%",
+        }}
+      />
+      <ProjectsSection />
     </main>
   );
 }

@@ -176,11 +176,31 @@ export default function ScrollRevealText({
     <section
       ref={sectionRef}
       id={id}
-      className="relative min-h-screen w-full overflow-hidden bg-[#0d0d0d] flex items-center justify-center"
+      className="relative w-full overflow-hidden bg-[#0d0d0d]"
       aria-labelledby={id ? `${id}-heading` : undefined}
     >
+      {/* ── Sticky Section Header ────────────────────────────────────────────── */}
+      <h3
+        style={{
+          position: "sticky",
+          top: "1.5rem",
+          zIndex: 10,
+          fontFamily: "var(--font-nav)",
+          fontSize: "0.85rem",
+          letterSpacing: "0.15em",
+          fontWeight: 700,
+          color: "#e05c3a",
+          textTransform: "uppercase",
+          paddingLeft: "2.5rem",
+          marginTop: "1.5rem",
+        }}
+      >
+        // INTRO
+      </h3>
+
       {/* ── Centred content wrapper ─────────────────────────────────────────── */}
-      <div className="w-full max-w-5xl mx-auto px-10 py-20">
+      <div className="w-full min-h-screen flex items-center justify-center">
+        <div className="w-full max-w-5xl mx-auto px-10 py-20">
 
         {/* Heading — NO CSS transition on spans; colour tracks scroll 1-to-1.
             aria-label on the <p> provides the full text for SEO & screen readers;
@@ -190,7 +210,7 @@ export default function ScrollRevealText({
           role="heading"
           aria-level={1}
           aria-label={heading}
-          className="text-[60px] font-bold leading-[1.1] tracking-tight text-justify indent-[250px]"
+          className="text-[60px] font-bold leading-[1.1] tracking-tight text-justify indent-[250px] mt-16"
           style={{ fontFamily: "var(--font-body, sans-serif)" }}
         >
           {chars.map((char, i) => (
@@ -211,12 +231,13 @@ export default function ScrollRevealText({
           }}
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="flex justify-end"
-          style={{ marginTop: "6rem" }}
+          style={{ marginTop: "2rem" }}
         >
           <HoverFillButton>
             See my Work
           </HoverFillButton>
         </motion.div>
+      </div>
       </div>
     </section>
   );
