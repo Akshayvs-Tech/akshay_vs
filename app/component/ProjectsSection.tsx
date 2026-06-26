@@ -17,27 +17,27 @@ interface Project {
 /* ─────────────────────────── data ───────────────────────────────────────── */
 const PROJECTS: Project[] = [
   {
-    year: "2024",
-    title: "Formula Vintage",
+    year: "2026",
+    title: "Track Vision",
     description:
-      "For Formula Vintage, we crafted a design that honors the rich heritage of classic cars while adding a modern twist. Combining timeless elegance with sleek, contemporary elements, we created an experience that appeals to both enthusiasts and newcomers, celebrating the past with a fresh perspective.",
-    tags: ["Landing Page", "Mobile App", "Redesign"],
+      "For TrackVision, we crafted an experience that bridges the precision of computer vision with the clarity of human understanding. Combining deep learning intelligence with an intuitive interface, we built a system that finds, follows, and narrates — turning raw footage into actionable insight.",
+    tags: ["Machine Learning", "Web Development", "Computer Vision"],
     image: null, // replace with "/formula-vintage.jpg" when ready
   },
   {
-    year: "2023",
-    title: "Project Two",
+    year: "2026",
+    title: "Mulearn Dashboard",
     description:
-      "A deep-dive into building a high-performance web application that serves thousands of concurrent users, with a focus on real-time data, elegant UI, and seamless developer experience.",
-    tags: ["Web App", "Backend", "Real-time"],
+      "For µLearn, we designed a unified ecosystem platform that goes beyond the conventional student portal. By building dedicated, purpose-fit dashboards for students, mentors, companies, and enablers, we created a space where every stakeholder in the learning journey feels at home — each with their own tools, insights, and actions, all under one roof.",
+    tags: ["Web App", "Frontend", "Real-time"],
     image: null,
   },
   {
-    year: "2023",
-    title: "Project Three",
+    year: "2025",
+    title: "HACK'P",
     description:
-      "An e-commerce platform redesign that improved conversion rates by 40% through intentional UX decisions, micro-animations, and a component-driven design system built from scratch.",
-    tags: ["E-commerce", "UI Design", "Next.js"],
+      "For HACKP, we built two privacy-first tools that tackle digital harm from opposite ends. Trace gives investigators a structured portal to segment case evidence and surface clues through the public. Take It Down puts power back in victims' hands — reporting harmful content without ever surrendering their evidence to a server. Two products. One mission: safer digital spaces.",
+    tags: ["Web App", "Frontend", "Next.js"],
     image: null,
   },
 ];
@@ -221,11 +221,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               >
                 {tag}
               </span>
-              {tag === project.tags[project.tags.length - 1] && (
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ opacity: 0.5 }}>
-                  <path d="M8 1L2 8h5l-1 5 6-7H7l1-5z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
-                </svg>
-              )}
             </div>
           ))}
         </div>

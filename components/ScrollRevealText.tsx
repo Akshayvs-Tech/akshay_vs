@@ -53,12 +53,13 @@ function LightningBolt() {
 /* ─────────────────────────────────────────────────────────────────────────────
    Hover Fill Button – fills with accent color (#e05c3a) from bottom to top
 ───────────────────────────────────────────────────────────────────────────── */
-function HoverFillButton({ children }: { children: React.ReactNode }) {
+function HoverFillButton({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   const [hovered, setHovered] = useState(false);
 
   return (
     <button
       type="button"
+      onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -233,7 +234,7 @@ export default function ScrollRevealText({
           className="flex justify-end"
           style={{ marginTop: "2rem" }}
         >
-          <HoverFillButton>
+          <HoverFillButton onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
             See my Work
           </HoverFillButton>
         </motion.div>
