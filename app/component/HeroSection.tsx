@@ -45,7 +45,7 @@ export default function HeroSection() {
       {/* ── Background image ──────────────────────────────────────── */}
       <div className="hero-bg" aria-hidden="true">
         <Image
-          src="/akshay-bg.PNG"
+          src="/akshay.PNG"
           alt="Akshay VS portrait"
           fill
           priority

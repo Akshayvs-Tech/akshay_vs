@@ -7,7 +7,7 @@ import {
   Oswald,
 } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "./components/CustomCursor";
+import CustomCursor from "./component/CustomCursor";
 
 /* ── Fonts (next/font/google – self-hosted, no layout shift) ─────────────── */
 const delaGothic = Dela_Gothic_One({

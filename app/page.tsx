@@ -1,4 +1,5 @@
-import HeroSection from "./components/HeroSection";
+import HeroSection from "./component/HeroSection";
+import AboutSection from "./component/AboutSection";
 
 /**
  * Home page – Server Component (SSR by default in Next.js App Router).
@@ -10,6 +11,7 @@ export default function Home() {
   return (
     <main>
       <HeroSection />
+      <AboutSection />
       {/* Future sections will be added here */}
     </main>
   );

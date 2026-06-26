@@ -77,7 +77,6 @@ body {
 .hero-bg {
   position: absolute;
   inset: 0;
-  z-index: 0;
   animation: bgRevealAnim 1.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -173,7 +172,6 @@ body {
 /* ── Hero Content Grid ───────────────────────────────────────────────────── */
 .hero-content {
   position: relative;
-  z-index: 10;
   display: grid;
   grid-template-areas:
     "name  name"
@@ -192,9 +190,9 @@ body {
   align-self: start;
   font-family: var(--font-hero);
   font-weight: 400;
-  font-size: clamp(3rem, 8vw, 7rem); /* reduced size */
+  font-size: clamp(3rem, 7.5vw, 7rem); /* reduced size */
   line-height: 0.9;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.06em;
   color: #ffffff;
   -webkit-text-stroke: 1.5px #ffffff;
   text-transform: uppercase;
@@ -270,11 +268,17 @@ body {
   font-weight: 400;
   font-size: clamp(3rem, 8vw, 7rem); /* reduced size */
   line-height: 0.85;
-  letter-spacing: 0.5em; /* increased spacing between V and S */
+  letter-spacing: 0.35em; /* increased spacing between V and S */
   color: #ffffff;
-  -webkit-text-stroke: 1.5px #ffffff;
   text-transform: uppercase;
   /* animation removed; children are animated individually */
+}
+
+/* Fix for Chrome: Apply difference blend mode directly to the animated spans, otherwise hardware-accelerated transforms break the parent's blend mode! */
+.hero-akshay span,
+.hero-vs span {
+  mix-blend-mode: difference;
+  display: inline-block;
 }
 
 /* ── Animations ──────────────────────────────────────────────────────────── */
@@ -344,11 +348,11 @@ body {
 
 @keyframes bgRevealAnim {
   from {
-    transform: scale(1.25);
+    transform: scale(1.1);
     opacity: 0;
   }
   to {
-    transform: scale(1.15);
+    transform: scale(1);
     opacity: 1;
   }
 }
