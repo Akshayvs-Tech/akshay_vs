@@ -194,26 +194,25 @@ body {
   -webkit-text-stroke: 1.5px #ffffff;
   text-transform: uppercase;
   margin-top: -0.05em;
-  /* animation removed; children are animated individually */
 }
 
 /* ── Vertical Portfolio label ────────────────────────────────────────────── */
 .hero-portfolio-label {
   grid-area: port;
-  justify-self: start; /* strictly align to the left edge of the grid column */
+  justify-self: start;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the line perfectly over the text */
+  align-items: center;
   gap: 0.75rem;
   margin-bottom: 2rem;
-  opacity: 0; /* starts hidden */
-  animation: fadeInPortfolio 1s 1.8s forwards; /* appears after everything else */
+  opacity: 0;
+  animation: fadeInPortfolio 1s 1.8s forwards;
 }
 
 .portfolio-line {
   display: block;
   width: 1px;
-  height: 5rem; /* as specified */
+  height: 5rem;
   background: rgba(255, 255, 255, 0.5);
 }
 
@@ -221,7 +220,7 @@ body {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   font-family: var(--font-nav);
-  font-size: 0.75rem; /* as specified */
+  font-size: 0.75rem;
   letter-spacing: 0.22em;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.7);
@@ -239,10 +238,10 @@ body {
 }
 
 .hero-cta-text {
-  font-family: var(--font-nav); /* Montserrat */
+  font-family: var(--font-nav);
   font-size: 1rem;
   letter-spacing: 0.22em;
-  font-weight: 700;              /* SemiBold */
+  font-weight: 700;
   font-style: italic;
   color: rgba(255, 255, 255, 0.85);
   text-transform: uppercase;
@@ -260,18 +259,16 @@ body {
   grid-area: vs;
   justify-self: end;
   align-self: end;
-  margin-right: 5rem; /* shift leftwards */
+  margin-right: 5rem;
   font-family: var(--font-hero);
   font-weight: 400;
-  font-size: clamp(3rem, 8vw, 7rem); /* reduced size */
+  font-size: clamp(3rem, 8vw, 7rem);
   line-height: 0.85;
-  letter-spacing: 0.35em; /* increased spacing between V and S */
+  letter-spacing: 0.35em;
   color: #ffffff;
   text-transform: uppercase;
-  /* animation removed; children are animated individually */
 }
 
-/* Fix for Chrome: Apply difference blend mode directly to the animated spans, otherwise hardware-accelerated transforms break the parent's blend mode! */
 .hero-akshay span,
 .hero-vs span {
   mix-blend-mode: difference;
@@ -380,7 +377,7 @@ body {
 
 .char-reveal {
   display: inline-block;
-  opacity: 0; /* starts hidden */
+  opacity: 0;
   animation: charRevealLeftRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
@@ -424,16 +421,16 @@ body {
 
 @media (max-width: 480px) {
   .hero-nav-links {
-    display: none; /* hide nav on very small screens */
+    display: none;
   }
 }
 
 /* ── Projects Section ────────────────────────────────────────────────────── */
 .projects-section {
-  color: var(--foreground);      /* White text */
+  color: var(--foreground);
   width: 100%;
   padding: 0;
-  position: relative; /* Ensure sticky label stays within bounds */
+  position: relative;
 }
 
 /* "// PROJECTS" top-left label row */
@@ -448,17 +445,15 @@ body {
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.15em;
-  color: #e05c3a; /* Exact color of // INTRO */
+  color: #e05c3a;
   text-transform: uppercase;
 }
-
-
 
 /* The thin horizontal rule between rows */
 .project-divider {
   width: 100%;
   height: 1px;
-  background: #444444; /* Darker divider to match the theme */
+  background: #444444;
 }
 
 /* Container for all project rows */
@@ -473,24 +468,33 @@ body {
   flex-direction: column;
 }
 
-/* The clickable inner area */
+/* ─────────────────────────────────────────────────────────────────────────
+   The clickable inner area.
+
+   ALL hover effects are now driven by the JS-applied `.is-hovered` class
+   instead of the CSS `:hover` pseudo-class.
+
+   Why? CSS `:hover` only re-evaluates on mousemove events. When the user
+   scrolls, the browser does NOT re-check hover state, so a row that slides
+   under the cursor while scrolling never gets the active styles.
+
+   The JS in ProjectsSection.tsx listens to both `mousemove` AND `scroll`,
+   checks each row's getBoundingClientRect() against the stored cursor
+   position, and toggles `.is-hovered` accordingly — giving pixel-perfect
+   hover during both mouse movement and scroll.
+   ───────────────────────────────────────────────────────────────────────── */
 .project-row-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2.8rem 12vw; /* Increased horizontal padding */
+  padding: 2.8rem 12vw;
   text-decoration: none;
   color: #ffffff;
   transition: background 0.25s ease;
   gap: 2rem;
 }
 
-.project-row-inner:hover,
-.project-row-inner.is-active {
-  /* Removed background highlight per user request */
-}
-
-/* Left side: name + category */
+/* ── project-info: slide on .is-hovered ── */
 .project-info {
   display: flex;
   flex-direction: column;
@@ -499,11 +503,11 @@ body {
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.project-row-inner:hover .project-info,
-.project-row-inner.is-active .project-info {
+.project-row-inner.is-hovered .project-info {
   transform: translate(12px, -6px);
 }
 
+/* ── project-name: colour change on .is-hovered ── */
 .project-name {
   font-family: var(--font-nav);
   font-size: clamp(1.4rem, 2.8vw, 2rem);
@@ -514,18 +518,19 @@ body {
   transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.project-row-inner:hover .project-name {
+.project-row-inner.is-hovered .project-name {
   color: #e05c3a !important;
 }
 
+/* ── project-category: blur-reveal on .is-hovered ── */
 .project-category {
   font-family: var(--font-nav);
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.15em;
-  color: rgba(255, 255, 255, 0.5); /* Dimmed white for category */
+  color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
-  
+
   /* Premium Blur Reveal Effect */
   max-height: 0;
   opacity: 0;
@@ -536,7 +541,7 @@ body {
   overflow: hidden;
 }
 
-.project-row-inner:hover .project-category {
+.project-row-inner.is-hovered .project-category {
   max-height: 24px;
   opacity: 1;
   margin-top: 0.4rem;
@@ -544,7 +549,7 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* Right side: thumbnail */
+/* ── project-thumb: 3D lift on .is-hovered ── */
 .project-thumb-wrap {
   flex-shrink: 0;
 }
@@ -553,10 +558,10 @@ body {
   position: relative;
   width: clamp(160px, 18vw, 240px);
   height: clamp(100px, 11vw, 150px);
-  border-radius: 0 !important; /* Sharp edges */
+  border-radius: 0 !important;
   overflow: hidden;
-  background: #222222; /* darker fallback for dark mode */
-  transform: scale(1) translateZ(0); /* Fixes browser anti-aliasing edge bleed */
+  background: #222222;
+  transform: scale(1) translateZ(0);
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -565,9 +570,8 @@ body {
   border-radius: 0 !important;
 }
 
-/* Only trigger on hover, not on scroll active state */
-.project-row-inner:hover .project-thumb {
-  transform: perspective(1000px) translate3d(0, -12px, 30px) scale(1.08); 
+.project-row-inner.is-hovered .project-thumb {
+  transform: perspective(1000px) translate3d(0, -12px, 30px) scale(1.08);
   box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.8), -20px -20px 60px rgba(255, 255, 255, 0.03);
 }
 
