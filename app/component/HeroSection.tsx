@@ -95,13 +95,18 @@ export default function HeroSection() {
         <ul className="hero-nav-links" role="list">
           {["ABOUT", "PROJECTS", "EXPERIENCE", "CONNECT"].map((item) => (
             <li key={item}>
-              <Link
+              <a
                 href={`#${item.toLowerCase()}`}
                 className="hero-nav-link"
                 aria-label={`Go to ${item}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+                  window.history.pushState(null, '', `#${item.toLowerCase()}`);
+                }}
               >
                 {item}
-              </Link>
+              </a>
             </li>
           ))}
         </ul>
