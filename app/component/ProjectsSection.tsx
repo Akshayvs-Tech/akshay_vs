@@ -1,17 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
-
-/**
- * ProjectsSection – matches the reference design:
- *  • White background
- *  • "//PROJECTS" label top-left
- *  • Each project is a full-width row: name left, thumbnail right
- *  • Rows separated by 1px #e0e0e0 dividers
- *  • Subtle hover: name slides right, image scales slightly
- */
 
 interface Project {
   id: number;
@@ -60,28 +51,25 @@ const PROJECTS: Project[] = [
 ];
 
 function ProjectRow({ project, index }: { project: Project; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  
-  // For the initial slide-up animation
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  
-  // For the scroll-based hover effect (active in the middle 70% of the screen)
-  const isActive = useInView(ref, { margin: "-15% 0px -15% 0px" });
+  const rowRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(rowRef, { once: true, margin: "-80px" });
 
   return (
     <motion.div
-      ref={ref}
+      ref={rowRef}
       className="project-row"
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
     >
-      <a 
-        href={project.href} 
+      <a
+        href={project.href}
         target="_blank"
         rel="noopener noreferrer"
-        className={`project-row-inner ${isActive ? "is-active" : ""}`} 
+        className="project-row-inner"
         aria-label={project.name}
+        // data-* attribute lets the parent's scroll tracker identify this element
+        data-project-row
       >
         {/* Left: name + category */}
         <div className="project-info">
@@ -99,7 +87,6 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
               sizes="(max-width: 768px) 40vw, 220px"
               style={{ objectFit: "cover" }}
               onError={(e) => {
-                // Hide broken image; placeholder bg takes over
                 (e.target as HTMLImageElement).style.opacity = "0";
               }}
             />
@@ -114,8 +101,69 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
 }
 
 export default function ProjectsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  /**
+   * updateHover – called on both mousemove AND scroll.
+   * Uses document.elementFromPoint to find which .project-row-inner
+   * the cursor is currently over, then applies/removes .is-hovered.
+   */
+  const cursorPos = useRef({ x: -9999, y: -9999 });
+
+  const updateHover = useCallback(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const { x, y } = cursorPos.current;
+
+    // Get all project row anchors inside this section
+    const rows = section.querySelectorAll<HTMLElement>("[data-project-row]");
+
+    rows.forEach((row) => {
+      const rect = row.getBoundingClientRect();
+      const isOver =
+        x >= rect.left &&
+        x <= rect.right &&
+        y >= rect.top &&
+        y <= rect.bottom;
+
+      if (isOver) {
+        row.classList.add("is-hovered");
+      } else {
+        row.classList.remove("is-hovered");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      cursorPos.current = { x: e.clientX, y: e.clientY };
+      updateHover();
+    };
+
+    const handleScroll = () => {
+      // Cursor position doesn't change on scroll, but element positions do.
+      // Re-run hover check with the last known cursor position.
+      updateHover();
+    };
+
+    // Use { passive: true } for scroll – no need to preventDefault
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [updateHover]);
+
   return (
-    <section id="projects" className="projects-section" aria-label="Projects">
+    <section
+      id="projects"
+      className="projects-section"
+      aria-label="Projects"
+      ref={sectionRef}
+    >
       {/* Top label */}
       <div className="projects-label-row">
         <span className="projects-label">// PROJECTS</span>
