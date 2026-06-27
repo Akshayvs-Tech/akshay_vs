@@ -177,7 +177,7 @@ export default function ScrollRevealText({
     <section
       ref={sectionRef}
       id={id}
-      className="relative w-full overflow-hidden bg-[#0d0d0d]"
+      className="relative w-full overflow-hidden"
       aria-labelledby={id ? `${id}-heading` : undefined}
     >
       {/* ── Sticky Section Header ────────────────────────────────────────────── */}
