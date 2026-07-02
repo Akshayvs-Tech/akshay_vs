@@ -449,6 +449,29 @@ body {
   text-transform: uppercase;
 }
 
+/* 3D Flip animation for dynamic header label */
+.flip-container {
+  perspective: 1000px;
+  display: inline-block;
+}
+
+.flip-text {
+  display: inline-block;
+  animation: flipIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  transform-origin: center center;
+}
+
+@keyframes flipIn {
+  0% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
 /* The thin horizontal rule between rows */
 .project-divider {
   width: 100%;

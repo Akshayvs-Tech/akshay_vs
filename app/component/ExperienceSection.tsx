@@ -74,6 +74,38 @@ const EXPERTISE: ExpertiseItem[] = [
       "AUTOMATED TESTING",
     ],
   },
+  {
+    number: "01",
+    title: "Cochin University College of Engineering Kuttanad",
+    role: "BACHELOR OF TECHNOLOGY",
+    period: "UG | 09.2023 - 05.2027",
+    bullets: [
+      "Studying core computer science concepts including data structures, algorithms, and software engineering.",
+      "Participated in multiple hackathons and built scalable web applications as part of academic projects.",
+    ],
+    skills: [
+      "COMPUTER SCIENCE",
+      "DATA STRUCTURES",
+      "ALGORITHMS",
+      "WEB DEVELOPMENT",
+    ],
+  },
+  {
+    number: "02",
+    title: "Kendriya Vidyalaya",
+    role: "HIGH SCHOOL",
+    period: "04.2020 - 05.2023",
+    bullets: [
+      "Completed secondary education with a focus on science and mathematics.",
+      "Participated actively in extra-curricular activities and school technical clubs.",
+    ],
+    skills: [
+      "MATHEMATICS",
+      "PHYSICS",
+      "CHEMISTRY",
+      "COMPUTER SCIENCE",
+    ],
+  },
 ];
 
 export default function ExperienceSection() {
@@ -81,6 +113,8 @@ export default function ExperienceSection() {
   const headerRef = useRef<HTMLDivElement>(null);
   const [headerFixed, setHeaderFixed] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [activeCategory, setActiveCategory] = useState("EXPERIENCE");
+  const activeCategoryRef = useRef("EXPERIENCE");
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -108,13 +142,21 @@ export default function ExperienceSection() {
       const shouldFix = rect.top <= 0 && rect.bottom > hh;
       setHeaderFixed(shouldFix);
 
+      // Track active category
+      let newCategory = "EXPERIENCE";
+
       // Card stacking animation
       cards.forEach((card, i) => {
         let progress = 0;
+        const cardRect = card.getBoundingClientRect();
+        
+        // If card is at the sticky position (with a small buffer), it's the active one
+        if (cardRect.top <= hh + 10) {
+          if (i >= 3) newCategory = "EDUCATION";
+        }
         
         // Calculate progress for all cards except the last one
         if (i < cards.length - 1) {
-          const cardRect = card.getBoundingClientRect();
           const nextCard = cards[i + 1];
           const nextRect = nextCard.getBoundingClientRect();
 
@@ -129,6 +171,11 @@ export default function ExperienceSection() {
         card.style.opacity = `${opacity}`;
         card.style.filter = progress > 0.05 ? `blur(${progress * 1.5}px)` : "";
       });
+
+      if (activeCategoryRef.current !== newCategory) {
+        setActiveCategory(newCategory);
+        activeCategoryRef.current = newCategory;
+      }
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -164,7 +211,11 @@ export default function ExperienceSection() {
         className={`exp-sticky-header${headerFixed ? " exp-sticky-header--fixed" : ""}`}
       >
         <div className="projects-label-row">
-          <span className="projects-label">// EXPERIENCE</span>
+          <span className="flip-container">
+            <span key={activeCategory} className="projects-label flip-text">
+              // {activeCategory}
+            </span>
+          </span>
         </div>
         <h2 className="exp-section-heading">Journey So Far...</h2>
       </div>
@@ -173,7 +224,7 @@ export default function ExperienceSection() {
       <div className="exp-stack-container">
         {EXPERTISE.map((item, i) => (
           <div
-            key={item.number}
+            key={item.title}
             className="exp-stack-card"
             style={{ zIndex: i + 1 }}
           >
@@ -210,6 +261,13 @@ export default function ExperienceSection() {
             <div className="exp-card-divider" aria-hidden="true" />
           </div>
         ))}
+
+        {/* 
+          This extra spacer extends the container's height by 100vh.
+          Because the last card is sticky, it will stay pinned to the screen
+          while you scroll past this empty space, creating a "pause" effect.
+        */}
+        <div style={{ height: "100vh" }} aria-hidden="true" />
       </div>
     </section>
   );
