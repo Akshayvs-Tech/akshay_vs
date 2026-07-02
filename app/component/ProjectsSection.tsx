@@ -17,7 +17,7 @@ const PROJECTS: Project[] = [
     id: 1,
     name: "Mulearn Dashboard",
     category: "Frontend",
-    image: "/mulearn.png",
+    image: "/projects/mulearn.png",
     href: "https://mulearn.org/",
   },
   {
@@ -29,10 +29,10 @@ const PROJECTS: Project[] = [
   },
   {
     id: 3,
-    name: "Supra Home",
-    category: "App Design",
-    image: "/projects/supra.jpg",
-    href: "#",
+    name: "Blog",
+    category: "FRONTEND",
+    image: "/projects/blog.png",
+    href: "https://blogs.osintjourno.com/",
   },
   {
     id: 4,

@@ -428,9 +428,9 @@ body {
 /* ── Projects Section ────────────────────────────────────────────────────── */
 .projects-section {
   color: var(--foreground);
+  background: var(--background);
   width: 100%;
   padding: 0;
-  position: relative;
 }
 
 /* "// PROJECTS" top-left label row */
@@ -606,5 +606,293 @@ body {
   .project-thumb {
     width: 100%;
     height: 180px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Scroll Stack: Projects scrolls normally; Experience slides over after
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Wrapper: plain flow container, no clipping */
+.scroll-stack-wrapper {
+  position: relative;
+  overflow: visible;
+}
+
+/* Projects: fully normal scroll */
+.projects-section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Experience outer section — same dark background as Projects (#0d0d0d) */
+.exp-section {
+  position: relative;
+  z-index: 2;
+  background: #0d0d0d;
+  color: #ffffff;
+  width: 100%;
+  padding: 0 0 6rem 0;
+  overflow: visible;
+}
+
+/* "// EXPERIENCE" label — reuses exact same classes as "// PROJECTS" */
+
+/* Header block: static by default, fixed when JS pins it */
+.exp-sticky-header {
+  position: static;
+  background: #0d0d0d;
+  padding-bottom: 0.5rem;
+}
+
+/* Applied by JS when section top crosses viewport top */
+.exp-sticky-header--fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 999;
+  background: #0d0d0d;
+}
+
+/* "Journey So Far..." section heading */
+.exp-section-heading {
+  font-family: var(--font-nav);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #ffffff;
+  padding: 0 3rem 3rem 3rem;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+/* ── Stacking card container ───────────────────────────────────────────── */
+/* Each child card is sticky so it "stacks" on top of the previous one    */
+.exp-stack-container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8vw;
+}
+
+/* Individual sticky card — same dark bg as Projects */
+.exp-stack-card {
+  position: sticky;
+  /* Offset below the fixed header so content isn't hidden behind it */
+  top: var(--exp-header-height, 0px);
+  background: #0d0d0d;
+  /* Each card must be tall enough to scroll past so the next one has room */
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto 1fr auto;
+  column-gap: 6vw;
+  padding: 5.5rem 0 3.5rem 0; /* Incorporated 2rem padding from .exp-left */
+  grid-template-areas:
+    "number  ."
+    "title   ."
+    "role    skills"
+    "desc    skills"
+    "divider divider";
+  /* transform-origin center for scale effect */
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+
+/* Grid areas for each stacking card */
+.exp-left {
+  display: contents;
+}
+
+/* Card divider (bottom of left+right) */
+.exp-card-divider {
+  grid-area: divider;
+  width: 100%;
+  height: 1px;
+  background: #444444;
+  margin-top: 2rem;
+}
+
+/* Number row: "01 ——" */
+.exp-number-row {
+  grid-area: number;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.exp-number {
+  font-family: var(--font-nav);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.exp-number-line {
+  display: block;
+  width: 2rem;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Title */
+.exp-title {
+  grid-area: title;
+  font-family: var(--font-nav);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+/* Role subheading row: "FRONTEND INTERN   01.2026" */
+.exp-role-row {
+  grid-area: role;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.exp-role {
+  font-family: var(--font-nav);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #e05c3a;
+  text-transform: uppercase;
+}
+
+.exp-period {
+  font-family: var(--font-nav);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Description */
+.exp-desc {
+  grid-area: desc;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 38ch;
+}
+
+/* Bullet-point description variant */
+.exp-bullets {
+  grid-area: desc;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 42ch;
+}
+
+.exp-bullet-item {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.5);
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.exp-bullet-item::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: #e05c3a;
+  font-weight: 700;
+}
+
+/* Skills list (right column) */
+.exp-skills {
+  grid-area: skills;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1.1rem;
+  /* padding removed — now automatically aligned by CSS grid */
+  align-items: flex-end;
+}
+
+.exp-skill-item {
+  font-family: var(--font-nav);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+.exp-skill-item::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  right: 0;
+  width: 0;
+  height: 1px;
+  background: #ffffff;
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.exp-skill-item:hover {
+  color: #ffffff;
+}
+
+.exp-skill-item:hover::after {
+  width: 100%;
+}
+
+/* ── Experience Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .exp-header {
+    padding: 4rem 6vw 3rem 6vw;
+  }
+
+  .exp-stack-container {
+    padding: 0 6vw;
+  }
+
+  .exp-stack-card {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "number"
+      "title"
+      "role"
+      "desc"
+      "skills"
+      "divider";
+    padding: 2.5rem 0;
+  }
+
+  .exp-skills {
+    align-items: flex-start;
+    margin-top: 2rem;
+    padding-top: 0;
+  }
+
+  .exp-card-divider {
+    margin-top: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .exp-quote {
+    font-size: clamp(1.4rem, 6vw, 2rem);
   }
 }

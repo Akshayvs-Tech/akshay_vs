@@ -1,6 +1,7 @@
 import HeroSection from "./component/HeroSection";
 import AboutSection from "./component/AboutSection";
 import ProjectsSection from "./component/ProjectsSection";
+import ExperienceSection from "./component/ExperienceSection";
 
 /**
  * Home page – Server Component (SSR by default in Next.js App Router).
@@ -22,7 +23,12 @@ export default function Home() {
           width: "100%",
         }}
       />
-      <ProjectsSection />
+      {/* Scroll-stack: Projects stays sticky; Experience slides over it */}
+      <div className="scroll-stack-wrapper">
+        <ProjectsSection />
+        <ExperienceSection />
+      </div>
     </main>
   );
 }
+
