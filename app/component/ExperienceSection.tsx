@@ -29,6 +29,7 @@ const EXPERTISE: ExpertiseItem[] = [
       "TAILWINDCSS",
       "SHADCN",
       "TANSTACK QUERY",
+      "ZUSTAND",
       "TYPESCRIPT",
       "RESPONSIVE DESIGN",
       
@@ -51,34 +52,26 @@ const EXPERTISE: ExpertiseItem[] = [
       "TAILWINDCSS",
       "SHADCN",
       "TANSTACK QUERY",
+      "ZUSTAND",  
       "TYPESCRIPT",
       "RESPONSIVE DESIGN",
     ],
   },
   {
     number: "03",
-    title: "Frontend Development",
+    title: "Software Tester",
+    role: "INTERNSHIP",
+    period: "07.2025 - 09.2025",
     bullets: [
-      "Building performant, accessible, and responsive web applications using modern frameworks and best practices. Every line of code is crafted with intention.",
+      "Performed both manual and automated testing to validate functionality, usability, and reliability across web applications.",
+      "Designed, developed, and maintained automated test suites using Cypress, improving regression testing coverage and reducing manual QA effort.",
+      "Integrated Cypress test suites into CI/CD pipelines, enabling faster feedback loops and catching regressions before deployment.",
     ],
     skills: [
-      "REACT / NEXT.JS",
-      "TYPESCRIPT",
-      "CSS ANIMATIONS",
-      "PERFORMANCE OPTIMIZATION",
-    ],
-  },
-  {
-    number: "04",
-    title: "UI / UX Design",
-    bullets: [
-      "Crafting intuitive, delightful interfaces that connect users to products seamlessly. I balance aesthetics with usability to create experiences that feel natural and engaging.",
-    ],
-    skills: [
-      "WIREFRAMING",
-      "PROTOTYPING",
-      "USER RESEARCH",
-      "INTERACTION DESIGN",
+      "MANUAL TESTING",
+      "TEST CASES",
+      "CYPRESS",
+      "AUTOMATED TESTING",
     ],
   },
 ];
@@ -115,17 +108,21 @@ export default function ExperienceSection() {
       const shouldFix = rect.top <= 0 && rect.bottom > hh;
       setHeaderFixed(shouldFix);
 
-      // Card stacking animation (unchanged logic)
+      // Card stacking animation
       cards.forEach((card, i) => {
-        if (i === cards.length - 1) return;
+        let progress = 0;
+        
+        // Calculate progress for all cards except the last one
+        if (i < cards.length - 1) {
+          const cardRect = card.getBoundingClientRect();
+          const nextCard = cards[i + 1];
+          const nextRect = nextCard.getBoundingClientRect();
 
-        const cardRect = card.getBoundingClientRect();
-        const nextCard = cards[i + 1];
-        const nextRect = nextCard.getBoundingClientRect();
+          const overlap = cardRect.bottom - nextRect.top;
+          progress = Math.max(0, Math.min(1, overlap / cardRect.height));
+        }
 
-        const overlap = cardRect.bottom - nextRect.top;
-        const progress = Math.max(0, Math.min(1, overlap / cardRect.height));
-
+        // Apply styles to all cards (progress will be 0 for the last card, resetting it to default)
         const scale = 1 - progress * 0.04;
         const opacity = 1 - progress * 0.35;
         card.style.transform = `scale(${scale})`;

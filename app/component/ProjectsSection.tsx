@@ -36,9 +36,9 @@ const PROJECTS: Project[] = [
   },
   {
     id: 4,
-    name: "Neon District",
-    category: "Branding",
-    image: "/projects/neon.jpg",
+    name: "Wild Guard",
+    category: "FRONTEND / BACKEND / AI",
+    image: "/projects/wildguard.jpg",
     href: "#",
   },
   {
