@@ -15,7 +15,7 @@ interface Project {
 const PROJECTS: Project[] = [
   {
     id: 1,
-    name: "Mulearn Dashboard",
+    name: "µLearn Dashboard",
     category: "Frontend",
     image: "/projects/mulearn.png",
     href: "https://mulearn.org/",
@@ -37,15 +37,8 @@ const PROJECTS: Project[] = [
   {
     id: 4,
     name: "Wild Guard",
-    category: "FRONTEND / BACKEND / AI",
+    category: "FRONTEND / BACKEND",
     image: "/projects/wildguard.jpg",
-    href: "#",
-  },
-  {
-    id: 5,
-    name: "Orbit Dashboard",
-    category: "Product Design",
-    image: "/projects/orbit.jpg",
     href: "#",
   },
 ];
@@ -94,8 +87,6 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
         </div>
       </a>
 
-      {/* Divider under each row */}
-      <div className="project-divider" aria-hidden="true" />
     </motion.div>
   );
 }

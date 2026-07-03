@@ -2,6 +2,7 @@ import HeroSection from "./component/HeroSection";
 import AboutSection from "./component/AboutSection";
 import ProjectsSection from "./component/ProjectsSection";
 import ExperienceSection from "./component/ExperienceSection";
+import SkillsSection from "./component/SkillsSection";
 
 /**
  * Home page – Server Component (SSR by default in Next.js App Router).
@@ -14,15 +15,8 @@ export default function Home() {
     <main>
       <HeroSection />
       <AboutSection />
-      {/* ── Divider: same border color as the "See my Work" button (#444444) ── */}
-      <hr
-        style={{
-          border: "none",
-          borderTop: "1px solid #444444",
-          margin: "0",
-          width: "100%",
-        }}
-      />
+      <SkillsSection />
+
       {/* Scroll-stack: Projects stays sticky; Experience slides over it */}
       <div className="scroll-stack-wrapper">
         <ProjectsSection />
