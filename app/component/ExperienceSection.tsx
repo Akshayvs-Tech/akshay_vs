@@ -257,17 +257,8 @@ export default function ExperienceSection() {
               ))}
             </ul>
 
-            {/* Bottom divider */}
-            <div className="exp-card-divider" aria-hidden="true" />
           </div>
         ))}
-
-        {/* 
-          This extra spacer extends the container's height by 100vh.
-          Because the last card is sticky, it will stay pinned to the screen
-          while you scroll past this empty space, creating a "pause" effect.
-        */}
-        <div style={{ height: "100vh" }} aria-hidden="true" />
       </div>
     </section>
   );

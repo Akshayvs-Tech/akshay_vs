@@ -87,6 +87,8 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
         </div>
       </a>
 
+      {/* Divider under each row */}
+      <div className="project-divider" aria-hidden="true" />
     </motion.div>
   );
 }

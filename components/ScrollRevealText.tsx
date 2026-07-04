@@ -10,8 +10,8 @@ import { motion } from "framer-motion";
 interface ScrollRevealTextProps {
   /** The large heading text to reveal character by character */
   heading: string;
-  /** Optional: substring of heading that reveals in the accent color (#e05c3a) instead of white */
-  accentText?: string;
+  /** Optional: substring(s) of heading that reveal in the accent color (#e05c3a) instead of white */
+  accentText?: string | string[];
   /** Optional: smaller paragraph displayed below the heading */
   subText?: string;
   /** Optional: CTA button label */
@@ -154,10 +154,15 @@ export default function ScrollRevealText({
   /* ── Memoised derived data ───────────────────────────────────────────────── */
   const chars = useMemo(() => heading.split(""), [heading]);
 
-  const { accentStart, accentEnd } = useMemo(() => {
-    if (!accentText) return { accentStart: -1, accentEnd: -1 };
-    const start = heading.indexOf(accentText);
-    return { accentStart: start, accentEnd: start + accentText.length };
+  const accentRanges = useMemo(() => {
+    if (!accentText) return [];
+    const phrases = Array.isArray(accentText) ? accentText : [accentText];
+    return phrases
+      .map((phrase) => {
+        const start = heading.indexOf(phrase);
+        return start >= 0 ? { start, end: start + phrase.length } : null;
+      })
+      .filter(Boolean) as { start: number; end: number }[];
   }, [heading, accentText]);
 
   /* ── Per-character colour ────────────────────────────────────────────────── */
@@ -165,7 +170,7 @@ export default function ScrollRevealText({
 
   const getCharColor = (i: number): string => {
     if (i >= revealedCount) return HIDDEN_COLOR;
-    if (accentStart >= 0 && i >= accentStart && i < accentEnd)
+    if (accentRanges.some(({ start, end }) => i >= start && i < end))
       return ACCENT_COLOR;
     return WHITE_COLOR;
   };
