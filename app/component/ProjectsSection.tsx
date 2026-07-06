@@ -10,6 +10,7 @@ interface Project {
   category: string;
   image: string;
   href: string;
+  inProgress?: boolean;
 }
 
 const PROJECTS: Project[] = [
@@ -26,6 +27,7 @@ const PROJECTS: Project[] = [
     category: "Frontend / Backend / AI",
     image: "/projects/mars.jpg",
     href: "#",
+    inProgress: true,
   },
   {
     id: 3,
@@ -70,20 +72,49 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
           <span className="project-category">{project.category}</span>
         </div>
 
-        {/* Right: thumbnail */}
+        {/* Right: thumbnail or in-progress badge */}
         <div className="project-thumb-wrap">
-          <div className="project-thumb">
-            <Image
-              src={project.image}
-              alt={project.name}
-              fill
-              sizes="(max-width: 768px) 40vw, 220px"
-              style={{ objectFit: "cover" }}
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.opacity = "0";
+          {project.inProgress ? (
+            <div
+              className="project-thumb"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "transparent",
+                border: "1.5px solid rgba(255,255,255,0.55)",
+                borderRadius: "999px",
+                padding: "1rem 2.4rem",
               }}
-            />
-          </div>
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-nav)",
+                  fontWeight: 700,
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "#ffffff",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                On Progress
+              </span>
+            </div>
+          ) : (
+            <div className="project-thumb">
+              <Image
+                src={project.image}
+                alt={project.name}
+                fill
+                sizes="(max-width: 768px) 40vw, 220px"
+                style={{ objectFit: "cover" }}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.opacity = "0";
+                }}
+              />
+            </div>
+          )}
         </div>
       </a>
 
