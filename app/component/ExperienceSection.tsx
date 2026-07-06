@@ -106,6 +106,25 @@ const EXPERTISE: ExpertiseItem[] = [
       "COMPUTER SCIENCE",
     ],
   },
+  {
+    number: "01",
+    title: "HACKP",
+    role: "HACKATHON FINALIST",
+    period: "2025",
+    bullets: [
+      "I was one of the frontend developers in HACKP 2025, building two products named Take-it-down and Trace-an-Object.",
+      "I was one of the 30 finalists selected among 1000+ candidates."
+    ],
+    skills: [
+      "REACT",
+      "TAILWINDCSS",
+      "SHADCN",
+      "TANSTACK QUERY",
+      "ZUSTAND",
+      "TYPESCRIPT",
+      "RESPONSIVE DESIGN",
+    ],
+  },
 ];
 
 export default function ExperienceSection() {
@@ -152,7 +171,8 @@ export default function ExperienceSection() {
         
         // If card is at the sticky position (with a small buffer), it's the active one
         if (cardRect.top <= hh + 10) {
-          if (i >= 3) newCategory = "EDUCATION";
+          if (i >= 5) newCategory = "ACHIEVEMENT";
+          else if (i >= 3) newCategory = "EDUCATION";
         }
         
         // Calculate progress for all cards except the last one

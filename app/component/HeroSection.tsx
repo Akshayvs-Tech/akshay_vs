@@ -43,19 +43,61 @@ export default function HeroSection() {
   const { scrollY } = useScroll();
   const akshayRef = useRef<HTMLHeadingElement>(null);
   const vsRef = useRef<HTMLDivElement>(null);
+  const navLinksRef = useRef<HTMLUListElement>(null);
   const maxOffsetRef = useRef(1000); // fallback
 
   useEffect(() => {
     const measure = () => {
       if (akshayRef.current && vsRef.current) {
-        // Calculate the distance between AKSHAY's top and VS's top
-        maxOffsetRef.current = vsRef.current.offsetTop - akshayRef.current.offsetTop;
+        // getBoundingClientRect gives viewport-relative coords; since both
+        // elements are measured at the same instant the scroll offset cancels,
+        // giving us the exact pixel gap between AKSHAY's top and VS's top.
+        const akshayRect = akshayRef.current.getBoundingClientRect();
+        const vsRect = vsRef.current.getBoundingClientRect();
+        // AKSHAY needs to travel exactly this many px down to sit level with VS
+        maxOffsetRef.current = vsRect.top - akshayRect.top;
       }
     };
-    measure();
-    // Re-measure on window resize to ensure accuracy across devices
+    // Small delay so the page has fully laid out before we measure
+    const timer = setTimeout(measure, 100);
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  /**
+   * Nav-spread effect:
+   * After 3.5 s (when the character-reveal finishes), the logo CSS animation
+   * (pushLogoOut) starts collapsing the logo. Simultaneously we trigger a
+   * CSS *transition* on flex-grow (more reliable than @keyframes for layout
+   * properties) so the nav-links ul grows to fill the freed space, and
+   * justify-content:space-between distributes the links evenly across the
+   * full nav width as the ul expands.
+   */
+  useEffect(() => {
+    const NAV_DELAY   = 3500; // matches the CSS animation-delay on .hero-logo
+    const NAV_DURATION = 1500; // matches the CSS animation-duration on .hero-logo
+
+    const timer = setTimeout(() => {
+      const ul = navLinksRef.current;
+      if (!ul) return;
+
+      // 1. Set up the transition BEFORE changing flex-grow so the browser
+      //    can interpolate from the current value (0) to the target (1).
+      ul.style.transition = `flex-grow ${NAV_DURATION}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+
+      // 2. Switch to space-between so items spread as the container widens.
+      ul.style.justifyContent = 'space-between';
+
+      // 3. On the very next frame, change flex-grow so the transition fires.
+      requestAnimationFrame(() => {
+        ul.style.flexGrow = '1';
+      });
+    }, NAV_DELAY);
+
+    return () => clearTimeout(timer);
   }, []);
   
   // Vanish immediately with an effect when scrolling starts (0 to 80px)
@@ -92,8 +134,8 @@ export default function HeroSection() {
           AKSHAY<span className="logo-vs">VS</span>
         </div>
 
-        <ul className="hero-nav-links" role="list">
-          {["ABOUT", "SKILLS", "PROJECTS", "EXPERIENCE", "CONNECT"].map((item) => (
+        <ul ref={navLinksRef} className="hero-nav-links" role="list">
+          {["ABOUT", "PROJECTS", "EXPERIENCE", "CONNECT"].map((item) => (
             <li key={item}>
               <a
                 href={`#${item.toLowerCase()}`}

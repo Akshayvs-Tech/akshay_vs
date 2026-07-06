@@ -114,6 +114,8 @@ body {
   gap: 0.15em;
   overflow: hidden;
   white-space: nowrap;
+  /* Explicit max-width so the pushLogoOut keyframe can tween 200px→0 */
+  max-width: 200px;
   animation: pushLogoOut 1.5s 3.5s forwards cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -121,18 +123,16 @@ body {
   color: #ffffff;
 }
 
-/* Nav links */
+/* Nav links – initial state; JS adds transition + flex-grow:1 after 3.5s */
 .hero-nav-links {
   display: flex;
   gap: 2.5rem;
   list-style: none;
-  animation: expandNavContainer 1.5s 3.5s forwards cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero-nav-links li {
   display: flex;
   justify-content: center;
-  animation: expandNavItems 1.5s 3.5s forwards cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero-nav-link {
@@ -296,6 +296,7 @@ body {
   }
 }
 
+/* Logo slides left and shrinks away, freeing space for the nav links */
 @keyframes pushLogoOut {
   0% {
     transform: translateX(0);
@@ -308,24 +309,6 @@ body {
     max-width: 0;
     margin: 0;
     padding: 0;
-  }
-}
-
-@keyframes expandNavContainer {
-  0% {
-    flex-grow: 0;
-  }
-  100% {
-    flex-grow: 1;
-  }
-}
-
-@keyframes expandNavItems {
-  0% {
-    flex-grow: 0;
-  }
-  100% {
-    flex-grow: 1;
   }
 }
 
@@ -968,19 +951,18 @@ body {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: transparent;
   padding: 0.5rem 1.1rem;
   border-radius: 999px; /* fully round pill */
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
   transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
   will-change: transform;
 }
 
 .skill-item:hover {
-  background: rgba(var(--skill-color, 255 255 255), 0.08);
-  border-color: var(--skill-color, rgba(255,255,255,0.25));
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  background: color-mix(in srgb, var(--skill-color) 8%, transparent);
+  border-color: var(--skill-color);
+  transform: translateY(-3px) !important;
 }
 
 /* Inline SVG icon inside pill */
@@ -1002,10 +984,10 @@ body {
 /* Skill name text */
 .skill-name {
   font-family: var(--font-nav);
-  font-size: 0.95rem;
-  font-weight: 400;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: #ffffff;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   white-space: nowrap;
   transition: color 0.25s ease;
@@ -1013,7 +995,7 @@ body {
 }
 
 .skill-item:hover .skill-name {
-  color: #ffffff !important;
+  color: var(--skill-color) !important;
 }
 
 /* ── Skills Responsive ─────────────────────────────────────────────────── */
