@@ -135,7 +135,7 @@ export default function HeroSection() {
         </div>
 
         <ul ref={navLinksRef} className="hero-nav-links" role="list">
-          {["ABOUT", "PROJECTS", "EXPERIENCE", "CONNECT"].map((item) => (
+          {["ABOUT", "SKILLS", "PROJECTS", "EXPERIENCE", "CONNECT"].map((item) => (
             <li key={item}>
               <a
                 href={`#${item.toLowerCase()}`}
