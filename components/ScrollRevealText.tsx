@@ -59,8 +59,15 @@ function HoverFillButton({ children, onClick }: { children: React.ReactNode; onC
   return (
     <button
       type="button"
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
+      onClick={(e) => {
+        if (onClick) onClick();
+      }}
+      onMouseEnter={() => {
+        // Completely disable the color fill hover effect on mobile
+        if (typeof window !== "undefined" && window.innerWidth >= 768) {
+          setHovered(true);
+        }
+      }}
       onMouseLeave={() => setHovered(false)}
       style={{
         position: "relative",
@@ -70,9 +77,9 @@ function HoverFillButton({ children, onClick }: { children: React.ReactNode; onC
         background: "#0d0d0d",
         color: "#ffffff",
         fontFamily: "var(--font-nav, sans-serif)",
-        fontSize: "0.95rem",
+        fontSize: "clamp(0.78rem, 1.5vw, 0.95rem)",
         fontWeight: 300,
-        padding: "1.6rem 2.5rem",
+        padding: "clamp(0.9rem, 2vw, 1.6rem) clamp(1.4rem, 3vw, 2.5rem)",
         transition: "border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
       }}
     >
@@ -205,8 +212,8 @@ export default function ScrollRevealText({
       </h3>
 
       {/* ── Centred content wrapper ─────────────────────────────────────────── */}
-      <div className="w-full min-h-screen flex items-center justify-center">
-        <div className="w-full max-w-5xl mx-auto px-10 py-20">
+      <div className="w-full min-h-[65vh] md:min-h-[75vh] lg:min-h-screen flex items-center justify-center">
+        <div className="w-[85%] sm:w-[80%] lg:w-full max-w-5xl mx-auto lg:px-10 py-16 lg:py-20">
 
         {/* Heading — NO CSS transition on spans; colour tracks scroll 1-to-1.
             aria-label on the <p> provides the full text for SEO & screen readers;
@@ -216,7 +223,7 @@ export default function ScrollRevealText({
           role="heading"
           aria-level={1}
           aria-label={heading}
-          className="text-[60px] font-bold leading-[1.1] tracking-tight text-justify indent-[250px] mt-16"
+          className="text-[26px] md:text-[38px] lg:text-[60px] font-bold leading-[1.1] tracking-tight text-left lg:text-justify indent-[50px] md:indent-[120px] lg:indent-[250px] mt-4 md:mt-8 lg:mt-16"
           style={{ fontFamily: "var(--font-body, sans-serif)" }}
         >
           {chars.map((char, i) => (
@@ -230,14 +237,16 @@ export default function ScrollRevealText({
           ))}
         </p>
 
+        {/* Spacer to forcefully push the button down on mobile view */}
+        <div className="h-16 sm:h-12 lg:h-0 w-full" aria-hidden="true" />
+
         <motion.div
           animate={{
             opacity: revealProgress > 0.8 ? 1 : 0,
             y: revealProgress > 0.8 ? 0 : 16,
           }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="flex justify-end"
-          style={{ marginTop: "2rem" }}
+          className="flex w-full justify-center lg:justify-end lg:mt-8"
         >
           <HoverFillButton onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
             See my Work

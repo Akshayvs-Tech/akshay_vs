@@ -22,7 +22,15 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  cursor: none !important; /* Force hide the default pointer on EVERYTHING */
+}
+
+/* Hide default cursor on desktop where custom cursor is active */
+@media (min-width: 768px) {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
 }
 
 html,
@@ -38,10 +46,21 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  cursor: none; /* hide default cursor for custom cursor */
+}
+
+@media (min-width: 768px) {
+  body {
+    cursor: none;
+  }
 }
 
 /* ── Custom Cursor ───────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .custom-cursor-container {
+    display: none !important;
+  }
+}
+
 .custom-cursor {
   position: fixed;
   top: 0;
