@@ -8,6 +8,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import CustomCursor from "../components/CustomCursor";
+import JsonLd from "../components/JsonLd";
 
 /* ── Fonts (next/font/google – self-hosted, no layout shift) ─────────────── */
 const delaGothic = Dela_Gothic_One({
@@ -47,7 +48,11 @@ const oswald = Oswald({
 
 /* ── SEO Metadata (SSR – Server Component) ───────────────────────────────── */
 export const metadata: Metadata = {
-  title: "Akshay VS | Portfolio – Frontend Developer",
+  metadataBase: new URL("https://akshayvs.dev"),
+  title: {
+    default: "Akshay VS | Portfolio – Frontend Developer",
+    template: "%s | Akshay VS",
+  },
   description:
     "Akshay VS – creative frontend developer crafting premium digital experiences. Explore my projects, skills and connect with me.",
   keywords: [
@@ -61,13 +66,25 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Akshay VS" }],
   creator: "Akshay VS",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Akshay VS | Portfolio",
     description:
       "Creative frontend developer crafting premium digital experiences.",
+    url: "/",
     type: "website",
     locale: "en_IN",
     siteName: "Akshay VS Portfolio",
+    images: [
+      {
+        url: "/akshay.PNG",
+        width: 1200,
+        height: 630,
+        alt: "Akshay VS – Frontend Developer Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -75,11 +92,23 @@ export const metadata: Metadata = {
     description:
       "Creative frontend developer crafting premium digital experiences.",
     creator: "@akshay_vs",
+    images: ["/akshay.PNG"],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
 };
 
@@ -99,6 +128,7 @@ export default function RootLayout({
       className={`${delaGothic.variable} ${montserrat.variable} ${barlow.variable} ${barlowCondensed.variable} ${oswald.variable}`}
     >
       <body>
+        <JsonLd />
         <CustomCursor />
         {children}
       </body>

@@ -40,13 +40,20 @@ function AnimateText({
 
 export default function HeroSection() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { scrollY } = useScroll();
   const akshayRef = useRef<HTMLHeadingElement>(null);
   const vsRef = useRef<HTMLDivElement>(null);
   const navLinksRef = useRef<HTMLUListElement>(null);
   const maxOffsetRef = useRef(1000); // fallback
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+  // Detect mobile after hydration (safe for SSR — server always gets false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     // Skip the measurement on mobile — the AKSHAY heading is hidden on mobile

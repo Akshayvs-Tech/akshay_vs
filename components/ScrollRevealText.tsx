@@ -197,10 +197,8 @@ export default function ScrollRevealText({
         {/* Heading — NO CSS transition on spans; colour tracks scroll 1-to-1.
             aria-label on the <p> provides the full text for SEO & screen readers;
             individual <span>s are aria-hidden. */}
-        <p
+        <h2
           id={id ? `${id}-heading` : undefined}
-          role="heading"
-          aria-level={1}
           aria-label={heading}
           className="text-[26px] md:text-[38px] lg:text-[60px] font-bold leading-[1.1] tracking-tight text-left lg:text-justify indent-[50px] md:indent-[120px] lg:indent-[250px] mt-4 md:mt-8 lg:mt-16"
           style={{ fontFamily: "var(--font-body, sans-serif)" }}
@@ -214,7 +212,7 @@ export default function ScrollRevealText({
               {char}
             </span>
           ))}
-        </p>
+        </h2>
 
         {/* Spacer to forcefully push the button down on mobile view */}
         <div className="h-16 sm:h-12 lg:h-0 w-full" aria-hidden="true" />

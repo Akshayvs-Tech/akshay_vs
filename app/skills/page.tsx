@@ -1,4 +1,20 @@
+import type { Metadata } from "next";
 import SkillsSection from "@/app/component/SkillsSection";
+
+export const metadata: Metadata = {
+  title: "Skills",
+  description:
+    "Explore Akshay VS's technical skills — React, Next.js, TypeScript, TailwindCSS, Node.js, Python, and more.",
+  alternates: {
+    canonical: "/skills",
+  },
+  openGraph: {
+    title: "Skills | Akshay VS",
+    description:
+      "Explore Akshay VS's technical skills — React, Next.js, TypeScript, TailwindCSS, Node.js, Python, and more.",
+    url: "/skills",
+  },
+};
 
 export default function SkillsPage() {
   return (
