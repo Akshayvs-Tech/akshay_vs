@@ -40,7 +40,7 @@ export default function ConnectSection() {
     >
       {/* Top label — matches // PROJECTS / // SKILLS */}
       <div className="projects-label-row">
-        <span className="projects-label">// CONNECT</span>
+        <span className="projects-label">{"//"} CONNECT</span>
       </div>
 
       {/* Main content block */}

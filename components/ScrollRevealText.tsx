@@ -30,27 +30,6 @@ const WHITE_COLOR = "#ffffff";
 const ACCENT_COLOR = "#e05c3a";
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Lightning Bolt SVG (bottom-right icon)
-───────────────────────────────────────────────────────────────────────────── */
-function LightningBolt() {
-  return (
-    <div
-      aria-hidden="true"
-      className="absolute bottom-8 right-8 w-9 h-9 border border-white/20 rounded-md flex items-center justify-center bg-black/50 backdrop-blur-sm"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="w-4 h-4 text-white"
-      >
-        <path d="M11.9997 22C11.7582 22 11.5249 21.9126 11.3414 21.7538C11.1091 21.5532 10.9859 21.2519 11.0108 20.9472L11.5835 13.9995H6.99965C6.67104 13.9995 6.3666 13.8407 6.17706 13.5701C5.98753 13.2995 5.94273 12.9567 6.05608 12.645L10.0561 1.64495C10.1983 1.25367 10.5694 1.00003 10.9997 1.00003H15.9997C16.3421 1.00003 16.666 1.14441 16.8924 1.39665C17.1189 1.64889 17.2263 1.98485 17.1868 2.3242L16.2731 10.0003H19.9997C20.3061 10.0003 20.596 10.1412 20.7819 10.3802C20.9678 10.6191 21.0287 10.9298 20.9463 11.2185L13.9463 21.7185C13.7915 21.8798 13.5901 21.9859 13.3703 21.9984C13.3673 21.9985 13.3643 21.9985 13.3614 21.9985C13.1259 21.9985 12.8986 21.9056 12.7302 21.7416L11.9997 22Z" />
-      </svg>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
    Hover Fill Button – fills with accent color (#e05c3a) from bottom to top
 ───────────────────────────────────────────────────────────────────────────── */
 function HoverFillButton({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
@@ -59,7 +38,7 @@ function HoverFillButton({ children, onClick }: { children: React.ReactNode; onC
   return (
     <button
       type="button"
-      onClick={(e) => {
+      onClick={() => {
         if (onClick) onClick();
       }}
       onMouseEnter={() => {
@@ -111,9 +90,7 @@ function HoverFillButton({ children, onClick }: { children: React.ReactNode; onC
 export default function ScrollRevealText({
   heading,
   accentText,
-  subText,
-  ctaLabel,
-  onCtaClick,
+
   id,
 }: ScrollRevealTextProps) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -182,14 +159,14 @@ export default function ScrollRevealText({
     return WHITE_COLOR;
   };
 
-  /* ── Sub-text / CTA fade-in ──────────────────────────────────────────────── */
-  const ctaSectionVisible = revealProgress > 0.8;
+
 
   return (
     <section
       ref={sectionRef}
       id={id}
       className="relative w-full overflow-hidden"
+      style={{ background: 'var(--background)' }}
       aria-labelledby={id ? `${id}-heading` : undefined}
     >
       {/* ── Sticky Section Header ────────────────────────────────────────────── */}
@@ -206,9 +183,11 @@ export default function ScrollRevealText({
           textTransform: "uppercase",
           paddingLeft: "2.5rem",
           marginTop: "1.5rem",
+          /* Ensure the label never shows through on a light section above */
+          background: "var(--background)",
         }}
       >
-        // INTRO
+        {"//"} INTRO
       </h3>
 
       {/* ── Centred content wrapper ─────────────────────────────────────────── */}

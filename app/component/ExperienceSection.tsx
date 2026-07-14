@@ -233,7 +233,7 @@ export default function ExperienceSection() {
         <div className="projects-label-row">
           <span className="flip-container">
             <span key={activeCategory} className="projects-label flip-text">
-              // {activeCategory}
+              {"//"} {activeCategory}
             </span>
           </span>
         </div>

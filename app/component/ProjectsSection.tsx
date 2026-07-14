@@ -190,7 +190,7 @@ export default function ProjectsSection() {
     >
       {/* Top label */}
       <div className="projects-label-row">
-        <span className="projects-label">// PROJECTS</span>
+        <span className="projects-label">{"//"} PROJECTS</span>
       </div>
 
       {/* Project list */}

@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 /**
@@ -40,13 +39,20 @@ function AnimateText({
 }
 
 export default function HeroSection() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const akshayRef = useRef<HTMLHeadingElement>(null);
   const vsRef = useRef<HTMLDivElement>(null);
   const navLinksRef = useRef<HTMLUListElement>(null);
   const maxOffsetRef = useRef(1000); // fallback
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
   useEffect(() => {
+    // Skip the measurement on mobile — the AKSHAY heading is hidden on mobile
+    // (display:none at <480px) and the sticky scroll effect is desktop-only.
+    if (isMobile) return;
+
     const measure = () => {
       if (akshayRef.current && vsRef.current) {
         // getBoundingClientRect gives viewport-relative coords; since both
@@ -65,6 +71,23 @@ export default function HeroSection() {
       clearTimeout(timer);
       window.removeEventListener("resize", measure);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fix mobile scroll zoom: lock the hero height to the initial window.innerHeight.
+  // On mobile, dvh recalculates when the browser toolbar hides/shows, causing the
+  // background image to resize. We lock it once at mount via a CSS custom property.
+  useEffect(() => {
+    const lockHeight = () => {
+      document.documentElement.style.setProperty(
+        '--hero-h',
+        `${window.innerHeight}px`
+      );
+    };
+    lockHeight();
+    // Re-lock on orientation change only (not scroll)
+    window.addEventListener('orientationchange', lockHeight);
+    return () => window.removeEventListener('orientationchange', lockHeight);
   }, []);
 
   /**
@@ -104,8 +127,12 @@ export default function HeroSection() {
   const vanishOpacity = useTransform(scrollY, [0, 80], [1, 0]);
   const vanishY = useTransform(scrollY, [0, 80], [0, 20]);
   
-  // Make AKSHAY sticky, but cap it so it stops exactly when it reaches the VS baseline
-  const stickyY = useTransform(scrollY, (y) => Math.min(y, maxOffsetRef.current));
+  // Make AKSHAY sticky, but cap it so it stops exactly when it reaches the VS baseline.
+  // On mobile, AKSHAY is hidden (display:none) so we return a static 0 to prevent
+  // framer-motion from applying any transform that could trigger layout on mobile.
+  const stickyY = useTransform(scrollY, (y) =>
+    isMobile ? 0 : Math.min(y, maxOffsetRef.current)
+  );
 
   return (
     <section
@@ -152,7 +179,40 @@ export default function HeroSection() {
             </li>
           ))}
         </ul>
+
+        {/* Hamburger menu for mobile/tablet */}
+        <button 
+          className={`hero-hamburger ${isMenuOpen ? 'open' : ''}`} 
+          aria-label="Menu" 
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+        </button>
       </nav>
+
+      {/* Mobile/Tablet Sidebar Navigation */}
+      <div className={`mobile-sidebar ${isMenuOpen ? "open" : ""}`} aria-hidden={!isMenuOpen}>
+        <ul className="mobile-sidebar-links" role="list">
+          {["ABOUT", "SKILLS", "PROJECTS", "EXPERIENCE", "CONNECT"].map((item, i) => (
+            <li key={item} style={{ transitionDelay: isMenuOpen ? `${0.1 + i * 0.05}s` : '0s' }}>
+              <a
+                href={`#${item.toLowerCase()}`}
+                className="mobile-sidebar-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsMenuOpen(false);
+                  document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+                  window.history.pushState(null, '', `#${item.toLowerCase()}`);
+                }}
+              >
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {/* ── Main content ──────────────────────────────────────────── */}
       <div className="hero-content">
@@ -183,26 +243,38 @@ export default function HeroSection() {
         {/* Bottom-left CTA (Montserrat SemiBold 600 Italic) */}
         <motion.div style={{ gridArea: "cta", opacity: vanishOpacity, y: vanishY }}>
           <div className="hero-cta">
-            <p className="hero-cta-text" aria-label="WANT TO KNOW ABOUT ME">
-              <AnimateText
-                text="WANT TO KNOW ABOUT ME"
-                baseDelay={0.8}
-                charClass="char-fade-blur"
-                delayIncrement={0.04}
-              />
-            </p>
-            <span className="hero-cta-arrow" aria-hidden="true">↓</span>
+            <div className="hero-cta-desktop">
+              <p className="hero-cta-text" aria-label="WANT TO KNOW ABOUT ME">
+                <AnimateText
+                  text="WANT TO KNOW ABOUT ME"
+                  baseDelay={0.8}
+                  charClass="char-fade-blur"
+                  delayIncrement={0.04}
+                />
+              </p>
+              <span className="hero-cta-arrow" aria-hidden="true">↓</span>
+            </div>
           </div>
         </motion.div>
 
         {/* VS – bottom right (Dela Gothic One, clamp(3.5rem, 10vw, 9rem)) */}
         <div ref={vsRef} className="hero-vs" aria-hidden="true">
-          <AnimateText
-            text="VS"
-            baseDelay={1.0}
-            charClass="char-reveal"
-            delayIncrement={0.08}
-          />
+          <div className="vs-desktop">
+            <AnimateText
+              text="VS"
+              baseDelay={1.0}
+              charClass="char-reveal"
+              delayIncrement={0.08}
+            />
+          </div>
+          <div className="vs-mobile">
+            <AnimateText
+              text="AKSHAY V S"
+              baseDelay={1.0}
+              charClass="char-reveal"
+              delayIncrement={0.05}
+            />
+          </div>
         </div>
 
       </div>

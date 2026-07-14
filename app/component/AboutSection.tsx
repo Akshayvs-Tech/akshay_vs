@@ -19,7 +19,7 @@ const ABOUT_ACCENT = [
   "fullstack developer ",
   "Cochin University College Of Engineering Kuttanad",
   "µLearn Foundation.",
-];
+];  
 
 
 export default function AboutSection() {
