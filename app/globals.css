@@ -25,7 +25,7 @@
 }
 
 /* Hide default cursor on desktop where custom cursor is active */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   *,
   *::before,
   *::after {
@@ -48,14 +48,14 @@ body {
   overflow-x: hidden;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   body {
     cursor: none;
   }
 }
 
 /* ── Custom Cursor ───────────────────────────────────────────────────────── */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .custom-cursor-container {
     display: none !important;
   }
@@ -79,14 +79,29 @@ body {
 }
 
 /* ── Hero Section ────────────────────────────────────────────────────────── */
+:root {
+  /* Fallback; overridden by JS lockHeight() on mount */
+  --hero-h: 100svh;
+}
+
 .hero-section {
   position: relative;
   width: 100%;
+  /* On desktop we can safely use dvh */
   height: 100dvh;
   min-height: 600px;
   overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr;
+  /*
+   * isolation:isolate creates an explicit compositing group that contains
+   * BOTH the background image and the text spans. mix-blend-mode:difference
+   * on the spans then ALWAYS composites against the image (black on white
+   * shirt, white on dark bg) — consistently, even during iOS scroll repaints.
+   * Without this, iOS Safari's scroll-triggered GPU compositing pass can split
+   * the image and text onto separate layers, breaking the blend mode.
+   */
+  isolation: isolate;
 }
 
 /* Background image */
@@ -94,6 +109,12 @@ body {
   position: absolute;
   inset: 0;
   animation: bgRevealAnim 1.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /*
+   * NO will-change here: will-change:opacity/transform promotes this element
+   * to its own GPU layer, which prevents mix-blend-mode on sibling text spans
+   * from compositing across the layer boundary on iOS Safari.
+   */
+  transform-origin: center center;
 }
 
 /* Gradient overlay – stronger left (text) → transparent right */
@@ -112,7 +133,7 @@ body {
 /* ── Navigation ──────────────────────────────────────────────────────────── */
 .hero-nav {
   position: relative;
-  z-index: 10;
+  z-index: 105;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -183,6 +204,125 @@ body {
 .hero-nav-link:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+/* Hamburger Menu (hidden on desktop) */
+.hero-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end; /* Align to right so shorter line looks cool */
+  gap: 6px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 101; /* Stay above sidebar */
+}
+
+.hamburger-line {
+  display: block;
+  height: 2px;
+  background: #ffffff;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hamburger-line:nth-child(1) {
+  width: 24px;
+}
+.hamburger-line:nth-child(2) {
+  width: 16px;
+}
+
+/* Open State for Hamburger - morphs into an X */
+.hero-hamburger.open {
+  position: fixed;
+  top: 1rem;
+  right: 1.25rem;
+}
+
+.hero-hamburger.open .hamburger-line:nth-child(1) {
+  transform: translateY(4px) rotate(45deg);
+  width: 24px;
+}
+.hero-hamburger.open .hamburger-line:nth-child(2) {
+  transform: translateY(-4px) rotate(-45deg);
+  width: 24px;
+}
+
+/* Mobile Sidebar Navigation */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 220px;
+  height: 100dvh;
+  background: rgba(13, 13, 13, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100;
+  padding: 4rem 1.5rem;
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mobile-sidebar.open {
+  transform: translateX(0);
+}
+
+.mobile-sidebar-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mobile-sidebar-links li {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mobile-sidebar.open .mobile-sidebar-links li {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mobile-sidebar-link {
+  font-family: var(--font-nav);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.mobile-sidebar-link:hover {
+  color: #e05c3a;
+}
+
+/* Mobile-specific elements (hidden on desktop) */
+.hero-cta-mobile {
+  display: none;
+}
+.vs-mobile {
+  display: none;
+}
+.hero-cta-text-mobile {
+  font-family: var(--font-nav);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  line-height: 1.4;
 }
 
 /* ── Hero Content Grid ───────────────────────────────────────────────────── */
@@ -288,11 +428,20 @@ body {
   text-transform: uppercase;
 }
 
+.hero-akshay,
+.hero-vs {
+  /* mix-blend-mode must be on the spans, NOT the parent.
+     overflow:hidden on the parent creates an isolation context that breaks
+     blend compositing. Using overflow:clip instead (see mobile media query)
+     clips without creating an isolation boundary. */
+}
+
 .hero-akshay span,
 .hero-vs span {
-  mix-blend-mode: difference;
   display: inline-block;
+  mix-blend-mode: difference;
 }
+
 
 /* ── Animations ──────────────────────────────────────────────────────────── */
 @keyframes heroFadeUp {
@@ -395,17 +544,48 @@ body {
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  /* ——————————————————————————————————————————————————
+     iOS Safari scroll zoom fix:
+     The ONLY reliable CSS solution is height: 100vh on mobile.
+     On iOS, `100vh` is always the LARGE viewport (toolbar hidden) — it is a
+     compile-time constant that does NOT recalculate on scroll, unlike dvh/svh.
+  —————————————————————————————————————————————————— */
+  .hero-section {
+    height: 100vh;
+    min-height: unset;
+    max-height: 100vh;
+    /* overflow:hidden is safe here because isolation:isolate (set globally)
+       creates the compositing group — we don't need overflow:clip to "fix"
+       the blend mode anymore. hidden correctly clips the mobile bg. */
+    overflow: hidden;
+  }
+
+  /* Lock the background image in place: no scale animation on mobile to
+     prevent the iOS scroll-zoom effect. No will-change — we must not promote
+     this to its own GPU layer as that breaks mix-blend-mode compositing. */
+  .hero-bg {
+    animation: bgRevealFadeMobile 1.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    transform: none !important;
+  }
+
   .hero-nav {
     padding: 1rem 1.25rem;
   }
 
   .hero-nav-links {
-    gap: 1.25rem;
+    display: none; /* Hide nav links on tablet */
   }
-
-  .hero-nav-link {
-    font-size: 0.7rem;
+  
+  .hero-hamburger {
+    display: flex; /* Show hamburger menu on tablet */
   }
 
   .hero-content {
@@ -413,17 +593,58 @@ body {
   }
 
   .hero-akshay {
-    font-size: clamp(2.5rem, 12vw, 5rem);
+    font-size: clamp(2.5rem, 15vw, 6rem);
   }
 
   .hero-vs {
-    font-size: clamp(2.5rem, 12vw, 5rem);
+    font-size: clamp(2.5rem, 15vw, 6rem);
+  }
+}
+
+/* Mobile-only bg fade animation (no scale = no zoom on scroll) */
+@keyframes bgRevealFadeMobile {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-nav-links {
+  .hero-akshay {
+    display: none; /* Hide top AKSHAY on mobile */
+  }
+
+  /* Hide CTA entirely on mobile */
+  .hero-cta {
     display: none;
+  }
+
+  /* Swap VS to AKSHAY V S */
+  .vs-desktop {
+    display: none;
+  }
+  .vs-mobile {
+    display: block;
+  }
+
+  .hero-vs {
+    font-size: clamp(1.2rem, 8.5vw, 3rem); 
+    letter-spacing: 0.1em;
+    margin-right: 0;
+    grid-area: vs;
+    justify-self: center; /* Center it horizontally */
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .hero-content {
+    grid-template-areas:
+      "port  ."
+      "port  ."
+      "vs    vs";
   }
 }
 
@@ -601,7 +822,7 @@ body {
 }
 
 /* ── Projects Responsive ─────────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .projects-label-row {
     padding: 2rem 1.5rem 1.5rem 1.5rem;
   }
@@ -883,7 +1104,7 @@ body {
 }
 
 /* ── Experience Responsive ────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .exp-header {
     padding: 4rem 6vw 3rem 6vw;
   }
@@ -893,8 +1114,10 @@ body {
   }
 
   .exp-stack-card {
-    min-height: auto;
+    min-height: 100vh;
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto auto;
+    align-content: start;
     grid-template-areas:
       "number"
       "title"
@@ -906,9 +1129,12 @@ body {
   }
 
   .exp-skills {
-    align-items: flex-start;
+    align-items: center;
     margin-top: 2rem;
     padding-top: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.2rem;
   }
 
   .exp-card-divider {
@@ -1082,14 +1308,22 @@ body {
 .connect-rotating-text {
   display: block;
   font-family: var(--font-nav);
-  font-size: clamp(3.2rem, 7.5vw, 7rem);
+  font-size: clamp(2rem, 8vw, 7rem);
   font-weight: 900;
   line-height: 1.0;
   letter-spacing: -0.03em;
   color: #ffffff;
   text-align: center;
   white-space: nowrap;
+  padding: 0 1rem;
   will-change: transform, opacity;
+}
+
+@media (max-width: 640px) {
+  .connect-rotating-text {
+    font-size: clamp(2.4rem, 9.5vw, 4rem);
+    white-space: nowrap;
+  }
 }
 
 /* Enter: slide up from below */
@@ -1208,7 +1442,7 @@ body {
 
 
 /* ── Connect Responsive ── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .connect-rotating-wrap {
     height: clamp(3rem, 12vw, 5rem);
   }

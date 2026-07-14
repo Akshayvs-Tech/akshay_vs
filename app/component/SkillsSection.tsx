@@ -179,7 +179,7 @@ export default function SkillsSection() {
     >
       {/* Top label */}
       <div className="projects-label-row">
-        <span className="projects-label">// SKILLS</span>
+        <span className="projects-label">{"//"} SKILLS</span>
       </div>
 
       {/* Skills list */}
